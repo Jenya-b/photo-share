@@ -1,0 +1,9 @@
+type User {
+  githubLogin: ID!
+  name: String
+  avatar: String
+}
+
+type Query {
+  totalUsers: Int!
+}
