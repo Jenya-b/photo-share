@@ -6,4 +6,5 @@ type User {
 
 type Query {
   totalUsers: Int!
+  allUsers: [User!]!
 }
