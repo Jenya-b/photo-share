@@ -10,6 +10,7 @@ type AuthPayload {
 }
 
 type Query {
+  me: User
   totalUsers: Int!
   allUsers: [User!]!
 }
