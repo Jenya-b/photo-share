@@ -4,7 +4,16 @@ type User {
   avatar: String
 }
 
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
 type Query {
   totalUsers: Int!
   allUsers: [User!]!
+}
+
+type Mutation {
+  githubAuth(code: String!): AuthPayload!
 }
