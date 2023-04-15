@@ -1,6 +1,22 @@
 const { authorizeWithGithub } = require('../lib');
 
 const Mutation = {
+  async postPhoto(parent, args, { db, currentUser }) {
+    if (!currentUser) {
+      throw new Error('only an authorized user can post a photo');
+    }
+
+    const newPhoto = {
+      ...args.input,
+      userID: currentUser.githubLogin,
+      created: new Date(),
+    };
+
+    const { insertedIds } = await db.collection('photos').insert(newPhoto);
+    newPhoto.id = insertedIds[0];
+    return newPhoto;
+  },
+
   async githubAuth(parent, { code }, { db }) {
     let { message, access_token, avatar_url, login, name } =
       await authorizeWithGithub({
@@ -29,20 +45,34 @@ const Mutation = {
     return { user, token: access_token };
   },
 
-  async postPhoto(parent, args, { db, currentUser }) {
-    if (!currentUser) {
-      throw new Error('only an authorized user can post a photo');
+  addFakeUsers: async (parent, { count }, { db }) => {
+    var randomUserApi = `https://randomuser.me/api/?results=${count}`;
+
+    var { results } = await fetch(randomUserApi).then((res) => res.json());
+
+    var users = results.map((r) => ({
+      githubLogin: r.login.username,
+      name: `${r.name.first} ${r.name.last}`,
+      avatar: r.picture.thumbnail,
+      githubToken: r.login.sha1,
+    }));
+
+    await db.collection('users').insert(users);
+
+    return users;
+  },
+
+  async fakeUserAuth(parent, { githubLogin }, { db }) {
+    var user = await db.collection('users').findOne({ githubLogin });
+
+    if (!user) {
+      throw new Error(`Cannot find user with githubLogin "${githubLogin}"`);
     }
 
-    const newPhoto = {
-      ...args.input,
-      userID: currentUser.githubLogin,
-      created: new Date(),
+    return {
+      token: user.githubToken,
+      user,
     };
-
-    const { insertedIds } = await db.collection('photos').insert(newPhoto);
-    newPhoto.id = insertedIds[0];
-    return newPhoto;
   },
 };
 
