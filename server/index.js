@@ -12,9 +12,23 @@ const resolvers = require('./resolvers');
 async function start() {
   const app = express();
   const MONGO_DB = process.env.DB_HOST;
+  let db;
 
-  const client = await MongoClient.connect(MONGO_DB, { useNewUrlParser: true });
-  const db = client.db();
+  try {
+    const client = await MongoClient.connect(MONGO_DB, {
+      useNewUrlParser: true,
+    });
+    db = client.db();
+  } catch (error) {
+    console.log(`
+    
+      Mongo DB Host not found!
+      please add DB_HOST environment variable to .env file
+      exiting...
+       
+    `);
+    process.exit(1);
+  }
 
   const server = new ApolloServer({
     typeDefs,
