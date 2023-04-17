@@ -7,6 +7,9 @@ const config: CodegenConfig = {
     './src/apollo/__generated__/': {
       preset: 'client',
       plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      config: {
+        withHooks: true,
+      },
     },
   },
 };
