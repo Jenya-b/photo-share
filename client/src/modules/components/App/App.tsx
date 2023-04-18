@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { ApolloProvider } from '@apollo/client';
 import { RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
@@ -9,9 +10,11 @@ import { router } from 'modules/router/router';
 
 export const App = () => (
   <ThemeProvider theme={theme}>
-    <ApolloProvider client={client}>
-      <RouterProvider router={router} />
-      <GlobalStyles />
-    </ApolloProvider>
+    <Suspense fallback={<p>Loading...</p>}>
+      <ApolloProvider client={client}>
+        <RouterProvider router={router} />
+        <GlobalStyles />
+      </ApolloProvider>
+    </Suspense>
   </ThemeProvider>
 );

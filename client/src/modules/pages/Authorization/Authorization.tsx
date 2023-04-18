@@ -23,8 +23,8 @@ export const AuthorizationPage = () => {
 
   const authComplete = (token: string) => {
     localStorage.setItem('token', token);
-    navigate('/');
     setDisabledBtn(false);
+    return navigate('profile');
   };
 
   const requestCode = () => {

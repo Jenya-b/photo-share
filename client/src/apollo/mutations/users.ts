@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import { gql } from '@apollo/client';
 
 export const ADD_FAKE_USERS = gql`
 	mitation addFakeUsers($count: Int!) {
