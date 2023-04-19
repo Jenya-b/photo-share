@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { GET_USERS } from 'apollo/queries/users';
+import { client } from 'apollo/client';
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -9,6 +10,7 @@ export const Profile = () => {
 
   const logout = () => {
     localStorage.removeItem('token');
+    client.writeQuery({ query: GET_USERS, data: { ...data, me: null } });
     navigate('/');
   };
 
