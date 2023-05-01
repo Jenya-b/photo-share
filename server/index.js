@@ -17,6 +17,7 @@ async function start() {
   try {
     const client = await MongoClient.connect(MONGO_DB, {
       useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
     db = client.db();
   } catch (error) {
